@@ -1,0 +1,2 @@
+* microcpp
+A C++ library for embedded devices. Initially targeted at the AVR platform.
