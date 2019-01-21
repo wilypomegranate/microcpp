@@ -1,0 +1,8 @@
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_MODULE_PATH})
+include(avr)
+
+
+set(CMAKE_C_FLAGS "-mmcu=atmega328p ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "-mmcu=atmega328p ${CMAKE_CXX_FLAGS}")
+
+add_definitions(-DF_CPU=16000000 -DBAUD=9600 -D__AVR_ATmega328P__)
