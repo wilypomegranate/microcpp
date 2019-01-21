@@ -6,9 +6,7 @@ endif()
 
 set(
   CMAKE_TOOLCHAIN_FILE
-  ${CMAKE_CURRENT_LIST_DIR}/toolchain/${MICROCPP_TOOLCHAIN_FILE}
+  ${CMAKE_CURRENT_LIST_DIR}/toolchain/${MICROCPP_TOOLCHAIN_FILE}.cmake
   )
-
-message(${CMAKE_TOOLCHAIN_FILE})
 
 project(microcpp VERSION 0.1.0 LANGUAGES CXX)
