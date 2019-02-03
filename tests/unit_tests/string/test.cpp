@@ -32,7 +32,7 @@ int main() {
   constexpr SString<24> ss("foo");
   SString<ss.size()> st = ss;
   st = "foo2";
-  std::cout << st.get_buffer() << "\n";
+  std::cout << st.c_str() << "\n";
 
   return 0;
 }

@@ -41,7 +41,7 @@ public:
     return Size;
   }
 
-  const char *get_buffer() const {
+  const char *c_str() const {
     return buffer;
   }
 
