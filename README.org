@@ -1,2 +1,4 @@
+* WIP
+I'm trying out some ideas and learning as I go.
 * microcpp
 A C++ library for embedded devices. Initially targeted at the AVR platform.
