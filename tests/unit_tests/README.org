@@ -1,0 +1,5 @@
+* Unit Tests
+Unit tests can be run on the compilation system architecture.
+Everything inside this directory must be platform agnostic.
+These are mostly used to test that conversion types and
+helper classes and functions work.
