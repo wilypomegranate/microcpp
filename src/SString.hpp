@@ -26,6 +26,8 @@ public:
 
   /// Take in a c-string.
   /// This assumes that the c-string is < Size.
+  /// TODO I really want it to be possible for the input size to
+  /// be determined at compile time  from the const char* input.
   constexpr SString(const char *input) : buffer() {
     assign_cstr(input);
   }
@@ -42,6 +44,13 @@ public:
   }
 
   const char *c_str() const {
+    return buffer;
+  }
+
+  // NOTE A dangerous method.
+  // Gives raw acces to the buffer.
+  // Only for debugging purposes.
+  char *mut_c_str() {
     return buffer;
   }
 

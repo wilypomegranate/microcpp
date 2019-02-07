@@ -1,3 +1,5 @@
+#pragma once
+
 // Right now a collection of useful string functions.
 // This is a pre-cursor to the static and dynamic string
 // implementations that I want to write.
