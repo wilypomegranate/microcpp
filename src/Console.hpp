@@ -7,6 +7,7 @@ extern "C" {
 #include <avr/io.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/setbaud.h>
 }
 
 namespace microcpp {
@@ -41,8 +42,12 @@ public:
 
     // Setup No 2x and 8-bit data.
     // TODO This shouldn't be hard-coded.
-    UCSR0A &= ~(_BV(U2X0));
-    UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+    Register ucsr0a(UCSR0A);
+    ucsr0a.clear_bits(U2X0);
+    Register ucsr0c(UCSR0C);
+    ucsr0c.set_bits(UCSZ01, UCSZ00);
+    Register ucsr0b(UCSR0B);
+    ucsr0b.set_bits(RXEN0, TXEN0);
 
     // Calculate baud rate.
     // Formula is (CLOCK_SPD / (16 * BAUD_RATE)) - 1.
@@ -65,11 +70,12 @@ public:
     // NOTE This isn't using string.h.
     // The idea is that we should reduce
     // looping as much as possible.
+    Register udr0(UDR0);
     while (value != '\0') {
       // Wait until the transmit buffer is empty.
       while (!(UCSR0A & _BV(UDRE0))) {
       }
-      UDR0 = value;
+      udr0 = value;
       value = input[++counter];
     }
   }

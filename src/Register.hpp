@@ -25,6 +25,11 @@ public:
     (*value) |= bitwise_or(reg, regs...);
   }
 
+  // Clear specific bits
+  template <typename... Ts> void clear_bits(T reg, Ts... regs) {
+    (*value) &= (~(bitwise_or(reg, regs...)));
+  }
+
   /// Set the register to a specific value.
   Register &operator=(const T &new_value) {
     (*value) = new_value;
