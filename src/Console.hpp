@@ -49,10 +49,10 @@ public:
     const uint16_t baud_rate_calc = (F_CPU / (16 * baud_rate)) - 1;
 
     // // Upper four bits should be set to the lower 4 bits of UBRR{n}H.
-    UBRR0H = (baud_rate_calc & 0xf00);
+    Register uart_high(UBRR0H, static_cast<uint8_t>(baud_rate_calc & 0xf00));
 
     // // Lower eight bits should be set to UBRR{n}L.
-    UBRR0L = (baud_rate_calc & 0xff);
+    Register uart_low(UBRR0L, static_cast<uint8_t>(baud_rate_calc & 0xff));
   }
 
   // Loop through a c-string and set the
