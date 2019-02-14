@@ -25,12 +25,12 @@ public:
     (*value) |= bitwise_or(reg, regs...);
   }
 
-  /// Clear specific bits
+  /// Clear specific bits.
   template <typename... Ts> void clear_bits(T reg, Ts... regs) {
     (*value) &= (~(bitwise_or(reg, regs...)));
   }
 
-  /// Flip specific bits
+  /// Flip specific bits.
   template <typename... Ts> void flip_bits(T reg, Ts... regs) {
     (*value) ^= bitwise_or(reg, regs...);
   }

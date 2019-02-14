@@ -60,6 +60,14 @@ public:
     Register uart_low(UBRR0L, static_cast<uint8_t>(baud_rate_calc & 0xff));
   }
 
+  /// Write a specific char to the console.
+  void write(const char &input) {
+    Register udr0(UDR0);
+    while (!(UCSR0A & _BV(UDRE0))) {
+    }
+    udr0 = input;
+  }
+
   // Loop through a c-string and set the
   // UART register to write to the console.
   // TODO write should be overloaded as
@@ -91,6 +99,57 @@ public:
     SString<sizeof(IntType) * scale_size> buffer;
     micro_itoa(input, buffer.mut_c_str(), base);
     write(buffer.c_str());
+  }
+
+  /// Find the first '{' in the fmt string and substitute between
+  /// that and the next char of '}'.
+  /// If the next char is '{', that means it's an escape.
+  /// If the next char is a  number, that means it's a
+  /// specific variable argument.
+  /// TODO If the number of arguments is incorrect, a compile-time
+  /// error should be thrown.
+  template <typename T, typename... Ts>
+  void fmt_stream(const char *fmt, uint8_t &pos, T val, Ts... vals) {
+
+    char value = fmt[pos];
+    while (value != '\0') {
+      if (value == '{') {
+        // Now write the next val.
+        write(val);
+        value = fmt[++pos];
+        value = fmt[++pos];
+        fmt_stream(fmt, pos, vals...);
+        break;
+      }
+      else {
+        if (value != '}') {
+          write(value);
+        }
+      }
+      value = fmt[++pos];
+    }
+  }
+
+  template <typename T> void fmt_stream(const char *fmt, uint8_t &pos, T val) {
+
+    char value = fmt[pos];
+
+    while (value != '\0') {
+      if (value == '{') {
+        write(val);
+      }
+      else {
+        if (value != '}') {
+          write(value);
+        }
+      }
+      value = fmt[++pos];
+    }
+  }
+
+  template <typename... Ts> void fmt(const char *fmt, Ts... vals) {
+    uint8_t pos = 0;
+    fmt_stream(fmt, pos, vals...);
   }
 
 private:

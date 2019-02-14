@@ -9,12 +9,15 @@ using namespace microcpp;
 int main() {
 
   Console console(9600);
-  console.write(TCCR0A);
-  console.write("\n");
+  // console.write(TCCR0A);
+  // console.write("\n");
   Register test(TCCR0A);
   test.set_bits(WGM00, WGM01);
 
-  console.write(TCCR0A);
-  console.write("\n");
+  console.fmt("foo: {}\nbar: {}\n", 65535, 2);
+  // console.write("{}\n");
+
+  // console.write(TCCR0A);
+  // console.write("\n");
   return 0;
 }
