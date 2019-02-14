@@ -14,7 +14,7 @@ int main() {
   Register test(TCCR0A);
   test.set_bits(WGM00, WGM01);
 
-  console.fmt("foo: {}\nbar: {}\n", 65535, 2);
+  console.fmt("WGM00: {}\tWGM01: {}\tTCCR0A: {}\n", WGM00, WGM01, TCCR0A);
   // console.write("{}\n");
 
   // console.write(TCCR0A);
