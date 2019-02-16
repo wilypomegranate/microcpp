@@ -13,11 +13,11 @@ public:
   }
 
   T bitwise_or(T reg) {
-    return reg;
+    return (1 << reg);
   }
 
   template <typename... Ts> T bitwise_or(T reg, Ts... regs) {
-    return (1 << reg) | (1 << bitwise_or(regs...));
+    return (1 << reg) | bitwise_or(regs...);
   }
 
   /// Set the provided bits to 1. All other bits will stay
@@ -56,11 +56,11 @@ inline void set_register(volatile T &location, U new_value) {
 }
 
 template <typename T> inline T bitwise_or(T reg) {
-  return reg;
+  return (1 << reg);
 }
 
 template <typename T, typename... Ts> inline T bitwise_or(T reg, Ts... regs) {
-  return (1 << reg) | (1 << bitwise_or(regs...));
+  return (1 << reg) | bitwise_or(regs...);
 }
 
 /// Set specific bits of a register.
