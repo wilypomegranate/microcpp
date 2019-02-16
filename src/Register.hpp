@@ -1,5 +1,6 @@
 #pragma once
 namespace microcpp {
+namespace reg {
 /// Class to represent a register
 template <class T> class Register {
 public:
@@ -44,4 +45,40 @@ public:
 private:
   volatile T *value;
 };
+
+/// In addition to the stateful interface, a simpler static interface
+/// also is provided.
+
+/// Set the value of a particular register.
+template <typename T, typename U>
+inline void set_register(volatile T &location, U new_value) {
+  location = new_value;
+}
+
+template <typename T> inline T bitwise_or(T reg) {
+  return reg;
+}
+
+template <typename T, typename... Ts> inline T bitwise_or(T reg, Ts... regs) {
+  return (1 << reg) | (1 << bitwise_or(regs...));
+}
+
+/// Set specific bits of a register.
+template <typename T, typename U, typename... Ts>
+inline void set_bits(volatile T &location, U reg, Ts... regs) {
+  location |= bitwise_or(reg, regs...);
+}
+
+/// Clear specific bits of a register.
+template <typename T, typename U, typename... Ts>
+inline void clear_bits(volatile T &location, U reg, Ts... regs) {
+  location &= (~(bitwise_or(reg, regs...)));
+}
+
+/// Flip specific bits of a register.
+template <typename T, typename U, typename... Ts>
+inline void flip_bits(volatile T &location, U reg, Ts... regs) {
+  location ^= bitwise_or(reg, regs...);
+}
+} // namespace reg
 } // namespace microcpp

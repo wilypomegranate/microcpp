@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Register.hpp"
 #include "SString.hpp"
 #include "String.hpp"
@@ -42,11 +43,11 @@ public:
 
     // Setup No 2x and 8-bit data.
     // TODO This shouldn't be hard-coded.
-    Register ucsr0a(UCSR0A);
+    reg::Register ucsr0a(UCSR0A);
     ucsr0a.clear_bits(U2X0);
-    Register ucsr0c(UCSR0C);
+    reg::Register ucsr0c(UCSR0C);
     ucsr0c.set_bits(UCSZ01, UCSZ00);
-    Register ucsr0b(UCSR0B);
+    reg::Register ucsr0b(UCSR0B);
     ucsr0b.set_bits(RXEN0, TXEN0);
 
     // Calculate baud rate.
@@ -54,15 +55,16 @@ public:
     const uint16_t baud_rate_calc = (F_CPU / (16 * baud_rate)) - 1;
 
     // // Upper four bits should be set to the lower 4 bits of UBRR{n}H.
-    Register uart_high(UBRR0H, static_cast<uint8_t>(baud_rate_calc & 0xf00));
+    reg::Register uart_high(UBRR0H,
+                            static_cast<uint8_t>(baud_rate_calc & 0xf00));
 
     // // Lower eight bits should be set to UBRR{n}L.
-    Register uart_low(UBRR0L, static_cast<uint8_t>(baud_rate_calc & 0xff));
+    reg::Register uart_low(UBRR0L, static_cast<uint8_t>(baud_rate_calc & 0xff));
   }
 
   /// Write a specific char to the console.
   void write(const char &input) {
-    Register udr0(UDR0);
+    reg::Register udr0(UDR0);
     while (!(UCSR0A & _BV(UDRE0))) {
     }
     udr0 = input;
@@ -78,7 +80,7 @@ public:
     // NOTE This isn't using string.h.
     // The idea is that we should reduce
     // looping as much as possible.
-    Register udr0(UDR0);
+    reg::Register udr0(UDR0);
     while (value != '\0') {
       // Wait until the transmit buffer is empty.
       while (!(UCSR0A & _BV(UDRE0))) {

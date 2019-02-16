@@ -9,8 +9,7 @@ using namespace microcpp;
 int main() {
 
   Console console(9600);
-  Register test(TCCR0A);
-  test.set_bits(WGM00, WGM01);
+  reg::set_bits(TCCR0A, WGM00, WGM01);
 
   console.fmt("WGM00: {}\tWGM01: {}\tTCCR0A: {}\n", WGM00, WGM01, TCCR0A);
 
