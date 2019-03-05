@@ -70,6 +70,13 @@ public:
     udr0 = input;
   }
 
+  // Read a specifc char from the console.
+  void read(char &output) {
+    while (!(UCSR0A & _BV(RXC0))) {
+    }
+    output = UDR0;
+  }
+
   // Loop through a c-string and set the
   // UART register to write to the console.
   // TODO write should be overloaded as
@@ -88,6 +95,44 @@ public:
       udr0 = value;
       value = input[++counter];
     }
+  }
+
+  // Read a SString's worth of data via UART.
+  // Return how many bytes were actually read.
+  // TODO Re-evaluate this method later.
+  // template <size_t Size> size_t read(SString<Size> &buffer) {
+  //   size_t bytes_read = 0;
+  //   for (size_t i = 0; i < Size; ++i) {
+  //     // TODO Handle error.
+  //     read(buffer[i]);
+  //     // TODO Actually figure out if character was read on some timeout.
+  //     bytes_read++;
+  //   }
+  //   return bytes_read;
+  // }
+
+  // Read until a character and then return.
+  // If the buffer isn't big enough or the character wasn't found,
+  // return Size + 1. If success return bytes_read.
+  template <size_t Size>
+  size_t read_until(SString<Size> &buffer, const char &input,
+                    bool strip = true) {
+    size_t bytes_read = 0;
+    for (size_t i = 0; i < Size; ++i) {
+      // TODO Handle error.
+      read(buffer[i]);
+      bytes_read++;
+      if (buffer[i] == input) {
+        // If the found character is stripped, then remove it from bytes
+        // read as well.
+        if (strip) {
+          buffer[i] = '\0';
+          bytes_read--;
+        }
+        return bytes_read;
+      }
+    }
+    return bytes_read;
   }
 
   template <typename IntType> void write(const IntType &input) {

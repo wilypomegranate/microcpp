@@ -54,6 +54,16 @@ public:
     return buffer;
   }
 
+  // TODO Bounds checking.
+  char operator[](size_t idx) const {
+    return buffer[idx];
+  }
+
+  // TODO Bounds checking.
+  char &operator[](size_t idx) {
+    return buffer[idx];
+  }
+
 private:
   char buffer[Size];
 
