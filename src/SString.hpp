@@ -22,7 +22,7 @@ namespace microcpp {
 /// strings are well-known at compile time.
 template <size_t Capacity = 24> class SString {
 public:
-  constexpr SString() : buffer{'\0'} {}
+  constexpr SString() : str_size(1), buffer{'\0'} {}
 
   /// Take in a c-string.
   /// This assumes that the c-string is < Capacity.
@@ -42,7 +42,7 @@ public:
   /// Copy constructor for SStrings of a smaller capacity.
   template <size_t SmallerCapacity>
   SString(const SString<SmallerCapacity> &rhs)
-      : str_size(rhs.length()), buffer() {
+      : str_size(rhs.size()), buffer() {
     static_assert(Capacity >= SmallerCapacity,
                   "New SString must be at least the same size.");
     for (size_t i = 0; i < SmallerCapacity; ++i) {
@@ -58,8 +58,10 @@ public:
     return str_size;
   }
 
+  /// Return the effective string length.
+  /// This excludes the '\0' at thend of the string.
   constexpr size_t length() const {
-    return str_size;
+    return str_size - 1;
   }
 
   const char *c_str() const {
@@ -77,7 +79,7 @@ public:
   /// Update the str_size in the case
   /// where the buffer is directly modified.
   /// Only for debugging purposes.
-  void set_str_size(size_t new_str_size) {
+  constexpr void set_str_size(size_t new_str_size) {
     str_size = new_str_size;
   }
 
@@ -101,7 +103,7 @@ public:
   /// str_size must be equivalent before checking
   /// that the bytes match.
   template <size_t OtherCapacity>
-  bool operator==(const SString<OtherCapacity> &rhs) const {
+  constexpr bool operator==(const SString<OtherCapacity> &rhs) const {
     if (length() != rhs.length()) {
       return false;
     }
@@ -115,8 +117,25 @@ public:
     return true;
   }
 
+  /// Compare an SString to a C String.
+  constexpr bool operator==(const char *rhs) const {
+    for (size_t i = 0; i < length(); ++i) {
+      char value = rhs[i];
+      // return false if we reach the end of the string
+      // before the end of the SString length.
+      if (value == '\0') {
+        return false;
+      }
+
+      if (buffer[i] != value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 private:
-  // This is the actual string length.
+  // This is the actual string size.
   size_t str_size;
   char buffer[Capacity];
 
