@@ -6,6 +6,7 @@ namespace wifi {
 class Esp8266 {
 public:
   enum class AP_MODE {};
+  const static uint32_t DEFAULT_BAUD_RATE = 111520;
 
   Esp8266(uint32_t baud_rate) : console(baud_rate) {}
   bool join_ap() {
