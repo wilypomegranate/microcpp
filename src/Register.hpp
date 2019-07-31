@@ -20,6 +20,10 @@ public:
     return (1 << reg) | bitwise_or(regs...);
   }
 
+  int operator&(int val) {
+    return (*value) & val;
+  }
+
   /// Set the provided bits to 1. All other bits will stay
   /// the same value.
   template <typename... Ts> void set_bits(T reg, Ts... regs) {
